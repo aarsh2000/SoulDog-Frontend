@@ -141,24 +141,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     console.log(formTitle);
     console.log(formDescr);
 
-<<<<<<< HEAD
-    // addPets(formBreed, formMaint, formAggr, formEnergy).then((res) => {
-    // console.log(res.data);
-    let petid = '99b80972-d473-452e-a6ac-d52966a327bb';
-    // if (petid !== 'Pet breed exists')
-    addPosts(user.id, petid, formTitle, formDescr, formName, formAge).then((res) =>
-      console.log(res)
-    );
-    // });
-  };
-=======
-    addPets(formBreed, formMaint, formAggr, formEnergy).then((res)=> {
+    addPets(formBreed, formMaint, formAggr, formEnergy).then((res) => {
       console.log(res.data);
       let petid = res.data;
-      if (petid !== "Pet breed exists") addPosts(user.id, petid, formTitle, formDescr, formName, formAge);
+      if (petid !== 'Pet breed exists')
+        addPosts(user.id, petid, formTitle, formDescr, formName, formAge);
     });
-  }
->>>>>>> 4c6df1bbfc5cfc90ce7e15df6c285d757abd3a71
+  };
 
   useEffect(() => {
     if (isOpenSidebar) {
