@@ -34,6 +34,11 @@ export default function App() {
         <Route path="/register">
           <Register />
         </Route>
+        <Route path="/testimonials">
+          {/* <DashboardLayout> */}
+          <Blog />
+          {/* </DashboardLayout> */}
+        </Route>
         <Route path="/dashboard">
           <DashboardLayout>
             <Products />

@@ -158,7 +158,7 @@ export default function BlogPostCard({ post, index }) {
             {title}
           </TitleStyle>
 
-          <InfoStyle>
+          {/* <InfoStyle>
             {POST_INFO.map((info, index) => (
               <Box
                 key={index}
@@ -175,7 +175,7 @@ export default function BlogPostCard({ post, index }) {
                 <Typography variant="caption">{fShortenNumber(info.number)}</Typography>
               </Box>
             ))}
-          </InfoStyle>
+          </InfoStyle> */}
         </CardContent>
       </Card>
     </Grid>

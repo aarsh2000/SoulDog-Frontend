@@ -15,28 +15,28 @@ import { logout } from '../../api';
 import { AuthContext } from '../../AuthContext';
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: homeFill,
-    linkTo: '/'
-  },
-  {
-    label: 'Profile',
-    icon: personFill,
-    linkTo: '#'
-  },
-  {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: '#'
-  }
-];
-
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const { user, setIsAuth } = useContext(AuthContext);
+  const MENU_OPTIONS = [
+    {
+      label: 'Home',
+      icon: homeFill,
+      linkTo: '/'
+    },
+    {
+      label: 'Profile',
+      icon: personFill,
+      linkTo: `/profile?id=${user.id}`
+    }
+    // {
+    //   label: 'Settings',
+    //   icon: settings2Fill,
+    //   linkTo: '#'
+    // }
+  ];
+
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
 

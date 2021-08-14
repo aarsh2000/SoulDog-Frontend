@@ -7,6 +7,8 @@ const API_URL = 'http://localhost:5000/api';
 const login = (form) =>
   axios.post(`${API_URL}/user/login`, { username: form.email, password: form.password });
 
+const apiRegister = (info) => axios.post(`${API_URL}/user/register`, info);
+
 const logout = () => {
   localStorage.removeItem('souldog-user');
   localStorage.setItem('souldog-isauth', false);
@@ -85,6 +87,7 @@ const getFavByUserIdAndPostId = (stuff) =>
 const apiAddFav = (stuff) => axios.post(`${API_URL}/fav/addFav`, stuff);
 
 const apiremoveFav = (stuff) => axios.post(`${API_URL}/fav/removeFav`, stuff);
+
 export {
   login,
   logout,
@@ -108,5 +111,6 @@ export {
   getFavsByUserId,
   getFavByUserIdAndPostId,
   apiAddFav,
-  apiremoveFav
+  apiremoveFav,
+  apiRegister
 };

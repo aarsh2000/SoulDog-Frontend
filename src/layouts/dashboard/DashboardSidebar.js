@@ -318,6 +318,15 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
         Create Post
       </Button>
+
+      <br />
+
+      <RouterLink to="/testimonials">
+        <Button variant="outlined" color="primary" style={{ width: '100%' }}>
+          Testimonials
+        </Button>
+      </RouterLink>
+
       <Modal
         open={open}
         onClose={() => setOpen(false)}
@@ -326,7 +335,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       >
         {body}
       </Modal>
-      <NavSection navConfig={sidebarConfig} />
+      {/* <NavSection navConfig={sidebarConfig} /> */}
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

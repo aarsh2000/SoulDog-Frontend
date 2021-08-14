@@ -61,6 +61,7 @@ export default function DashboardLayout() {
 
   useEffect(() => {
     getAllPosts().then((res) => {
+      console.log(res.data);
       setPosts(res.data);
       setOriginal(res.data);
     });
@@ -185,7 +186,7 @@ export default function DashboardLayout() {
                         role="button"
                         onClick={() => handleClick(post)}
                       >
-                        <PostCard post={post} />
+                        <PostCard post={post} key={item} />
                       </div>
                     </Grid>
                   ))}

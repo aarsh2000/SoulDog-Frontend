@@ -8,9 +8,13 @@ import {
   getLikeByUserIdAndPostId,
   addLikes,
   deleteLike,
-  getLikeByPostId
+  getLikeByPostId,
+  getFavByUserIdAndPostId,
+  apiAddFav,
+  apiremoveFav,
+  getUserById
 } from '../../api';
-import { useLocation, Redirect } from 'react-router-dom';
+import { useLocation, Redirect, Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Typography, TextField, Button } from '@material-ui/core';
@@ -25,6 +29,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { nullFormat } from 'numeral';
@@ -40,25 +45,34 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Comment = ({ data }) => (
-  <div style={{ fontSize: '40%' }}>
-    <Divider style={{ margin: '15px' }} />
-    <Grid container wrap="nowrap" spacing={2}>
-      <Grid item>
-        <Avatar alt="Remy Sharp" src={''} />
+const Comment = ({ data }) => {
+  const [commentUser, setCommentUser] = useState({});
+  useEffect(() => {
+    getUserById(data.user_id).then((res2) => setCommentUser(res2.data));
+  }, []);
+  return (
+    <div style={{ fontSize: '40%' }}>
+      <Divider style={{ margin: '15px' }} />
+      <Grid container wrap="nowrap" spacing={2}>
+        <Grid item>
+          <Avatar alt="Remy Sharp" src={''} />
+        </Grid>
+        <Grid justifyContent="left" item xs zeroMinWidth>
+          <h4 style={{ margin: 0, textAlign: 'left' }}>
+            <Link to={`/profile?id=${data.user_id}`}>{commentUser.username}</Link>
+          </h4>
+          <p style={{ textAlign: 'left', color: 'gray' }}>{data.created_at}</p>
+          <p style={{ textAlign: 'left' }}>{data.text}</p>
+        </Grid>
       </Grid>
-      <Grid justifyContent="left" item xs zeroMinWidth>
-        <h4 style={{ margin: 0, textAlign: 'left' }}>{data.user_id}l</h4>
-        <p style={{ textAlign: 'left', color: 'gray' }}>{data.created_at}</p>
-        <p style={{ textAlign: 'left' }}>{data.text}</p>
-      </Grid>
-    </Grid>
-  </div>
-);
+    </div>
+  );
+};
 
 const Post = (props) => {
   const [post, setPost] = useState({});
   const search = useLocation().search;
+  const loc = useLocation();
   const id = new URLSearchParams(search).get('id');
   const classes = useStyles();
   const [dogImg, setDogImg] = useState(
@@ -70,12 +84,15 @@ const Post = (props) => {
   const [commentText, setCommentText] = useState('');
   const [liked, setLiked] = useState(null);
   const [likeCount, setLikeCount] = useState(0);
+  const [isFav, setIsFav] = useState(false);
+  const [postUser, setPostUser] = useState({});
 
   const { isAuth, user } = useContext(AuthContext);
 
   useEffect(() => {
     getPostById(id).then((res) => {
       setPost(res.data);
+      getUserById(res.data.user_id).then((res2) => setPostUser(res2.data));
       //console.log(res.data);
     });
 
@@ -96,7 +113,24 @@ const Post = (props) => {
       // console.log(res.data.length);
       setLikeCount(res.data.length);
     });
+
+    if (user.id && id) {
+      getFavByUserIdAndPostId({ user_id: user.id, post_id: id }).then((res) => {
+        console.log(res.data);
+        setIsFav(true);
+      });
+    }
   }, []);
+
+  const addFav = () => {
+    apiAddFav({ user_id: user.id, post_id: post.id }).then((res) => console.log(res));
+    setIsFav(true);
+  };
+
+  const removeFav = () => {
+    apiremoveFav({ user_id: user.id, post_id: post.id });
+    setIsFav(false);
+  };
 
   const handleCommentSubmit = () => {
     if (commentText == '') {
@@ -152,7 +186,9 @@ const Post = (props) => {
                     {post.title}
                   </Typography>
                   <Typography>{new Date(post.created_at).toDateString()}</Typography>
-                  <Typography>{post.user_id}</Typography>
+                  <Typography>
+                    <Link to={`/profile?id=${post.user_id}`}>{postUser.username}</Link>
+                  </Typography>
                   <br />
                   <Typography>Name: {post.name}</Typography>
                   <Typography>Age: {post.age}</Typography>
@@ -160,33 +196,42 @@ const Post = (props) => {
                   <img alt="1" height="300px" src={dogImg} />
                   <br />
                   <Typography>{post.content}</Typography>
-                </Paper>
 
-                <div onClick={flipLike}>
-                  <IconButton aria-label="like" style={{ float: 'left', width: '50%' }}>
-                    <>
-                      {liked ? (
-                        <ThumbUpAltIcon fontSize="large" />
-                      ) : (
-                        <ThumbUpAltOutlinedIcon fontSize="large" />
-                      )}
+                  <hr />
+
+                  <Grid container>
+                    <Grid item xs={2}>
+                      <IconButton onClick={flipLike} aria-label="like">
+                        <>{liked ? <ThumbUpAltIcon /> : <ThumbUpAltOutlinedIcon />}</>
+                      </IconButton>
                       &nbsp;
                       {likeCount}
-                    </>
-                  </IconButton>
-                </div>
+                    </Grid>
 
-                <div onClick={deleteForever}>
-                  <IconButton aria-label="delete" style={{ float: 'right', width: '50%' }}>
-                    <DeleteForeverIcon fontSize="large" />
-                  </IconButton>
-                </div>
+                    {isFav ? (
+                      <IconButton aria-label="add to favorites" onClick={removeFav}>
+                        <FavoriteIcon style={{ color: 'rgb(179, 0, 0)' }} />
+                      </IconButton>
+                    ) : (
+                      <IconButton aria-label="add to favorites" onClick={addFav}>
+                        <FavoriteIcon />
+                      </IconButton>
+                    )}
+
+                    <Grid item xs={6} />
+                    <Grid item xs={2}>
+                      <IconButton onClick={deleteForever} aria-label="delete">
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Paper>
 
                 <br />
 
                 <Paper
                   className={classes.paper}
-                  elevation={3}
+                  elevation={2}
                   style={{ maxHeight: '400px', overflow: 'auto' }}
                 >
                   {/* {post} */}

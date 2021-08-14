@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useState, useEffect } from 'react';
-import { useLocation, Redirect } from 'react-router-dom';
+import { useLocation, Redirect, Link } from 'react-router-dom';
 import {
   Grid,
   Paper,
@@ -215,14 +215,19 @@ const Profile = () => {
             <TabPanel value={value} index={0}>
               <Grid container spacing={3}>
                 {posts.map((post, item) => (
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <div
                       style={{ cursor: 'pointer' }}
                       tabIndex={item}
                       role="button"
-                      onClick={(item) => handleClick(post)}
+                      // onClick={(item) => handleClick(post)}
                     >
-                      <PostCard post={post} />
+                      <Link
+                        style={{ width: '0', textDecoration: 'none' }}
+                        to={`/post?id=${post.id}`}
+                      >
+                        <PostCard post={post} />
+                      </Link>
                     </div>
                   </Grid>
                 ))}
@@ -232,16 +237,51 @@ const Profile = () => {
             <TabPanel value={value} index={1}>
               <Grid container spacing={3}>
                 {favourites.map((post, item) => (
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <div
                       style={{ cursor: 'pointer' }}
                       tabIndex={item}
                       role="button"
-                      onClick={(item) => handleClick(post)}
+                      // onClick={(item) => handleClick(post)}
                     >
-                      <PostCard post={post} />
+                      <Link
+                        style={{ width: '0', textDecoration: 'none' }}
+                        to={`/post?id=${post.id}`}
+                      >
+                        <PostCard post={post} />
+                      </Link>
                     </div>
                   </Grid>
+                ))}
+              </Grid>
+            </TabPanel>
+
+            <TabPanel value={value} index={2}>
+              <Grid container spacing={3}>
+                {posts.map((post, item) => (
+                  <>
+                    {post.energy == energy &&
+                    post.aggression == strength &&
+                    post.maintenance == freetime ? (
+                      <Grid item xs={4}>
+                        <div
+                          style={{ cursor: 'pointer' }}
+                          tabIndex={item}
+                          role="button"
+                          // onClick={(item) => handleClick(post)}
+                        >
+                          <Link
+                            style={{ width: '0', textDecoration: 'none' }}
+                            to={`/post?id=${post.id}`}
+                          >
+                            <PostCard post={post} />
+                          </Link>
+                        </div>
+                      </Grid>
+                    ) : (
+                      <></>
+                    )}
+                  </>
                 ))}
               </Grid>
             </TabPanel>
