@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'https://souldog-api.herokuapp.com/';
+const API_URL = 'https://souldog-api.herokuapp.com';
 
 const login = (form) =>
   axios.post(`${API_URL}/user/login`, { username: form.email, password: form.password });
